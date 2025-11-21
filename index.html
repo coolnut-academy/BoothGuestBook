@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงนามเยี่ยมชมบูธ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ตั้งค่า Theme Cozy Red --- */
+        :root {
+            --bg-color: #FFF5F5; /* สีครีมอมชมพู */
+            --primary-red: #E57373; /* แดงพาสเทล */
+            --dark-red: #C62828; /* แดงเข้มสำหรับตัวหนังสือ */
+            --text-color: #5D4037; /* น้ำตาลเข้ม */
+            --white: #FFFFFF;
+            --shadow: 0 4px 15px rgba(229, 115, 115, 0.2);
+        }
+
+        body {
+            font-family: 'Mali', cursive;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 24px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: min(100%, 640px);
+            margin: 0 auto;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .logo {
+            width: min(160px, 45vw);
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15));
+        }
+
+        h1 {
+            color: var(--dark-red);
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            margin: 0;
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+        }
+
+        p.subtitle {
+            font-size: clamp(1rem, 3.4vw, 1.2rem);
+            color: var(--primary-red);
+            line-height: 1.5;
+        }
+
+        /* --- Card Form --- */
+        .card-form {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 2px solid #FFCDD2;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .card-form:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #FFEBEE;
+            border-radius: 15px;
+            font-family: 'Mali', cursive;
+            font-size: 1rem;
+            color: var(--text-color);
+            box-sizing: border-box;
+            background: #FFEBEE;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary-red);
+            background: var(--white);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--primary-red);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            font-family: 'Mali', cursive;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #EF5350;
+            transition: all 0.1s;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* --- Loading Overlay --- */
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            color: var(--primary-red);
+        }
+
+        /* --- Guestbook List --- */
+        .guestbook-section {
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--dark-red);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message-card {
+            background: var(--white);
+            padding: 15px 20px;
+            border-radius: 15px;
+            border-left: 8px solid var(--primary-red);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .msg-name {
+            font-weight: 700;
+            color: var(--primary-red);
+            font-size: 1.1rem;
+        }
+
+        .msg-content {
+            font-size: 1rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        /* --- Animations --- */
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Decorations */
+        .deco-circle {
+            position: fixed;
+            background: var(--primary-red);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 16px 32px;
+            }
+
+            .card-form {
+                padding: 20px;
+            }
+
+            .message-card {
+                padding: 14px 16px;
+            }
+
+            .msg-header {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                margin-bottom: 24px;
+            }
+
+            .card-form,
+            .guestbook-section {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .msg-header span:last-child {
+                font-size: 0.85rem;
+                color: #B0B0B0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="deco-circle" style="width: 300px; height: 300px; top: -100px; left: -100px;"></div>
+    <div class="deco-circle" style="width: 200px; height: 200px; bottom: 50px; right: -50px;"></div>
+
+    <div class="container">
+        <header>
+            <img class="logo" src="https://img2.pic.in.th/pic/sssawdwadsadw.png" alt="โลโก้โครงการ โรงเรียนเล่าเรื่อง">
+            <h1>❤️ลงนามเยี่ยมชมบูธของเรา❤️</h1>
+            <p class="subtitle">นิทรรศการโรงเรียนที่ตั้งในพื้นที่ลักษณะพิเศษ</p>
+        </header>
+
+        <div class="card-form">
+            <form id="submit-form">
+                <div class="form-group">
+                    <label>ชื่อของคุณ (Name)</label>
+                    <input type="text" name="Name" placeholder="เช่น น้องแมว ใจดี" required>
+                </div>
+                <div class="form-group">
+                    <label>ข้อความถึงเรา (Message)</label>
+                    <textarea name="Message" rows="3" placeholder="เขียนข้อความน่ารักๆ ที่นี่..." required></textarea>
+                </div>
+                <button type="submit" id="btn-submit">ส่งข้อความ ✨</button>
+            </form>
+            <div class="loading" id="loading-msg">กำลังส่งข้อความ... 💌</div>
+        </div>
+
+        <div class="guestbook-section">
+            <h2 class="section-title">ขอบพระคุณทุกท่าน ที่แวะมาหาเรา</h2>
+            <button onclick="fetchData()" style="width:auto; margin:0 auto; display:block; font-size:0.9rem; background:#FFAB91; box-shadow: 0 4px 0 #FF8A65;">🔄 โหลดข้อความล่าสุด</button>
+            <br>
+            <div class="message-list" id="message-container">
+                <div style="text-align:center; color:#aaa;">กำลังโหลดข้อมูล...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🔴 ใส่ Web App URL ของคุณเรียบร้อยแล้ว
+        // ==========================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhbVfnvfJimEc1I9xAbMiX7ar1fdVAp9jNRZ8JKoSJM3ehPOTMdUfLAU5IMuLPhwm3fQ/exec'; 
+
+        const form = document.getElementById('submit-form');
+        const btnSubmit = document.getElementById('btn-submit');
+        const loadingMsg = document.getElementById('loading-msg');
+        const msgContainer = document.getElementById('message-container');
+
+        // 1. ฟังก์ชันส่งข้อมูล (POST)
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            // UI Effects
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = 'รอสักครู่...';
+            loadingMsg.style.display = 'block';
+
+            let requestBody = new FormData(form);
+
+            fetch(SCRIPT_URL, { method: 'POST', body: requestBody})
+                .then(response => {
+                    alert('ขอบคุณที่แวะมาทักทายนะ! 🥰');
+                    form.reset();
+                    fetchData(); // โหลดข้อมูลใหม่ทันที
+                })
+                .catch(error => {
+                    alert('อุ๊ย! เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะ');
+                    console.error('Error!', error.message);
+                })
+                .finally(() => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = 'ส่งข้อความ ✨';
+                    loadingMsg.style.display = 'none';
+                });
+        });
+
+        // 2. ฟังก์ชันดึงข้อมูล (GET)
+        function fetchData() {
+            msgContainer.innerHTML = '<div style="text-align:center; color:#aaa;">กำลังโหลด... ☁️</div>';
+            
+            fetch(SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    msgContainer.innerHTML = ''; // เคลียร์ของเก่า
+
+                    // data ที่ได้มาจะเป็น Array [Timestamp, Name, Message]
+                    // เราจะ loop ย้อนกลับ (reverse) เพื่อเอาอันล่าสุดขึ้นก่อน
+                    // เริ่มที่ i=1 เพราะ i=0 คือหัวตาราง (Header)
+                    
+                    let count = 0;
+                    for (let i = data.length - 1; i >= 1; i--) {
+                        let row = data[i];
+                        let timestamp = new Date(row[0]);
+                        let name = row[1];
+                        let message = row[2];
+                        
+                        // แปลงเวลาให้อ่านง่าย
+                        let timeString = timestamp.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
+                        let dateString = timestamp.toLocaleDateString('th-TH');
+
+                        let html = `
+                            <div class="message-card" style="animation-delay: ${count * 0.1}s">
+                                <div class="msg-header">
+                                    <span class="msg-name">${name}</span>
+                                    <span>${dateString} ${timeString}</span>
+                                </div>
+                                <div class="msg-content">${message}</div>
+                            </div>
+                        `;
+                        msgContainer.innerHTML += html;
+                        count++;
+                    }
+
+                    if(data.length <= 1) {
+                        msgContainer.innerHTML = '<div style="text-align:center; color:#aaa;">ยังไม่มีข้อความ มาเป็นคนแรกสิ! 👇</div>';
+                    }
+                })
+                .catch(error => {
+                    // กรณีนี้อาจเกิดถ้า Sheet ยังว่างเปล่าหรือตั้งค่าผิด
+                    console.error('Error fetching data:', error);
+                    msgContainer.innerHTML = '<div style="text-align:center; color:#aaa;">ยังไม่มีข้อความ หรือ โหลดข้อมูลไม่ได้</div>';
+                });
+        }
+
+        // โหลดข้อมูลทันทีเมื่อเปิดเว็บ
+        window.onload = fetchData;
+
+    </script>
+</body>
+</html>
